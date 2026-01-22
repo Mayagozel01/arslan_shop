@@ -18,9 +18,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'phone',
         'email',
         'password',
+        'role_id',
+        'cart_id',
+        'order_id',
     ];
 
     /**
@@ -44,5 +49,29 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the role that owns the user.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Get the cart that owns the user.
+     */
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
+    /**
+     * Get the order that owns the user.
+     */
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }
