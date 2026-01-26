@@ -35,14 +35,14 @@
         <div class="main-content">
             <!-- Header -->
             <header class="bg-white shadow-sm">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="py-6 ">
                     <h1 class="text-3xl font-bold text-gray-900">@yield('header', 'Dashboard')</h1>
                     <p class="mt-2 text-sm text-gray-600">@yield('subheader', 'Welcome to the SHOP.CO Admin Panel')</p>
                 </div>
             </header>
 
             <!-- Content -->
-            <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <main class="py-6">
                 @yield('content')
             </main>
         </div>
