@@ -5,10 +5,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SotrudnikController;
 use App\Http\Controllers\PokupatelController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return view('home');
 })->name('home');
+
 
 // Guest Routes (Auth)
 Route::middleware('guest')->group(function () {
@@ -30,6 +32,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('/roles', RoleController::class);
     Route::resource('/sotrudniks', SotrudnikController::class);
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
+
 
 });
 

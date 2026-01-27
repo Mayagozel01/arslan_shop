@@ -17,8 +17,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
-        Address::factory(2)->create();
-        $this->call([CategorySeeder::class]);
+        $this->call([
+            RoleSeeder::class,
+            MainCategorySeeder::class,
+            CategorySeeder::class,
+            SubCategorySeeder::class,
+            BrandSeeder::class,
+            StyleSeeder::class,
+            SizeSeeder::class,
+            ColorSeeder::class,
+            ProductSeeder::class,
+            UserSeeder::class,
+        ]);
+        // User::factory(10)->create();
+        // Address::factory(2)->create();
     }
 }
