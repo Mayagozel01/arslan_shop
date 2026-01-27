@@ -6,10 +6,12 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SotrudnikController;
 use App\Http\Controllers\PokupatelController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AdminProductController;
 
 Route::get('/', function () {
     return view('home');
 })->name('home');
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
 
 // Guest Routes (Auth)
@@ -32,8 +34,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('/roles', RoleController::class);
     Route::resource('/sotrudniks', SotrudnikController::class);
-    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::resource('/products', AdminProductController::class);
 
+    // AJAX routes for creating related entities
+    Route::post('/products/store-brand', [AdminProductController::class, 'storeBrand'])->name('products.store-brand');
+    Route::post('/products/store-category', [AdminProductController::class, 'storeCategory'])->name('products.store-category');
+    Route::post('/products/store-sub-category', [AdminProductController::class, 'storeSubCategory'])->name('products.store-sub-category');
+    Route::post('/products/store-style', [AdminProductController::class, 'storeStyle'])->name('products.store-style');
+    Route::post('/products/store-size', [AdminProductController::class, 'storeSize'])->name('products.store-size');
+    Route::post('/products/store-color', [AdminProductController::class, 'storeColor'])->name('products.store-color');
+    Route::get('/categories-by-main/{mainCategory}', function ($mainCategoryId) {
+        return \App\Models\Category::where('main_category_id', $mainCategoryId)->get();
+    })->name('categories.by-main');
 
 });
 

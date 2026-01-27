@@ -23,7 +23,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('admin.products') }}"
+            <a href="{{ route('admin.products.index') }}"
                 class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
                 <svg class="mr-3 flex-shrink-0 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

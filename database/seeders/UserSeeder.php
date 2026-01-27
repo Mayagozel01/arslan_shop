@@ -17,7 +17,12 @@ class UserSeeder extends Seeder
     {
         $adminRole = \App\Models\Role::where('name', 'Admin')->first();
         $managerRole = \App\Models\Role::where('name', 'Manager')->first();
-        $staffRole = \App\Models\Role::where('name', 'Staff')->first();
+        $warehouseManagerRole = \App\Models\Role::where('name', 'warehouse manager')->first();
+        $operatorRole = \App\Models\Role::where('name', 'operator')->first();
+        $bugalterRole = \App\Models\Role::where('name', 'bugalter')->first();
+        $sborshikRole = \App\Models\Role::where('name', 'sborshik')->first();
+        $kuryerRole = \App\Models\Role::where('name', 'kuryer')->first();
+
 
         $users = [
             [
@@ -45,7 +50,7 @@ class UserSeeder extends Seeder
                 'type' => 'sotrudnik',
                 'email' => 'staff@example.com',
                 'password' => Hash::make('password'),
-                'role_id' => $staffRole->id,
+                'role_id' => $warehouseManagerRole->id,
             ],
             [
                 'first_name' => 'John',

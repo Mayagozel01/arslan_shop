@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ColorSeeder::class,
             ProductSeeder::class,
             UserSeeder::class,
+            WarehouseSeeder::class,
         ]);
         // User::factory(10)->create();
         // Address::factory(2)->create();
