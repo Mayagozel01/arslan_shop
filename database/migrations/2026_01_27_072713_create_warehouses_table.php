@@ -16,12 +16,11 @@ return new class extends Migration {
             $table->string('location')->nullable();
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
-            $table->unsignedBigInteger('manager_id')->nullable();
             $table->string('manager_name')->nullable();
             $table->integer('capacity')->nullable(); // in square meters or units
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->foreign('manager_id')->references('id')->on('users');
+            $table->foreignId('warehouse_manager_id')->constrained('users')->onDelete('cascade');
         });
     }
 

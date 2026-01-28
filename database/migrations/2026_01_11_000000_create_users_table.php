@@ -24,9 +24,9 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreignId('role_id')->nullable();
-            $table->foreignId('cart_id')->nullable();
-            $table->foreignId('order_id')->nullable();
+            $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('cascade');
+            $table->foreignId('cart_id')->nullable()->constrained('carts')->onDelete('cascade');
+            $table->foreignId('order_id')->nullable()->constrained('orders')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

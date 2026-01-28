@@ -7,6 +7,8 @@ use App\Http\Controllers\SotrudnikController;
 use App\Http\Controllers\PokupatelController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\Auth\AuthController;
 
 Route::get('/', function () {
     return view('home');
@@ -15,12 +17,11 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 
 
 // Guest Routes (Auth)
-Route::middleware('guest')->group(function () {
-    Route::get('/register', [PokupatelController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [PokupatelController::class, 'register'])->name('register.submit');
-    Route::get('/login', [PokupatelController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [PokupatelController::class, 'login'])->name('login.submit');
-});
+
+Route::get('/register', [PokupatelController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [PokupatelController::class, 'register'])->name('register.submit');
+Route::get('/login', [PokupatelController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [PokupatelController::class, 'login'])->name('login.submit');
 
 Route::post('/logout', [PokupatelController::class, 'logout'])->name('logout')->middleware('auth');
 
@@ -31,10 +32,13 @@ Route::prefix('pokupatel')->name('pokupatel.')->middleware('auth')->group(functi
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AuthController::class, 'showLoginForm'])->name('dashboard');
+    Route::post('/dashboard/login', [AuthController::class, 'dashboardLogin'])->name('dashboard.login');
+    Route::get('/dashboard/home', [AdminController::class, 'dashboard'])->name('dashboard.home');
     Route::resource('/roles', RoleController::class);
     Route::resource('/sotrudniks', SotrudnikController::class);
     Route::resource('/products', AdminProductController::class);
+    Route::resource('/warehouses', WarehouseController::class);
 
     // AJAX routes for creating related entities
     Route::post('/products/store-brand', [AdminProductController::class, 'storeBrand'])->name('products.store-brand');
