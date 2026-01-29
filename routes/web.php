@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminController\CountryController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminController\AdminController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SotrudnikController;
 use App\Http\Controllers\PokupatelController;
@@ -33,6 +34,7 @@ Route::prefix('pokupatel')->name('pokupatel.')->middleware('auth')->group(functi
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'showLoginForm'])->name('dashboard');
+    Route::get('locations', [CountryController::class, 'index'])->name('locations');
     Route::post('/dashboard/login', [AuthController::class, 'dashboardLogin'])->name('dashboard.login');
     Route::get('/dashboard/home', [AdminController::class, 'dashboard'])->name('dashboard.home');
     Route::resource('/roles', RoleController::class);
@@ -50,6 +52,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/categories-by-main/{mainCategory}', function ($mainCategoryId) {
         return \App\Models\Category::where('main_category_id', $mainCategoryId)->get();
     })->name('categories.by-main');
+
+    Route::resource('/locations', CountryController::class);
 
 });
 

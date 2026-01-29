@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Warehouse extends Model
@@ -36,5 +37,9 @@ class Warehouse extends Model
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
+    }
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_warehouse')->withPivot(['income', 'stocks']);
     }
 }

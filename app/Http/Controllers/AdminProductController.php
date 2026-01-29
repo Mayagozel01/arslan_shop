@@ -16,7 +16,7 @@ class AdminProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['subCategory.category.mainCategory', 'brands', 'styles', 'sizes', 'colors']);
+        $query = Product::with(['subCategory.category.mainCategory', 'brands', 'styles', 'sizes', 'colors', 'warehouses']);
 
         // Filters
         if ($request->filled('main_category')) {
@@ -49,7 +49,9 @@ class AdminProductController extends Controller
         $sizes = Size::all();
         $colors = Color::all();
 
-        return view('admin.products', compact('products', 'mainCategories', 'subCategories', 'brands', 'styles', 'sizes', 'colors'));
+        $warehouses = \App\Models\Warehouse::all();
+
+        return view('admin.products', compact('products', 'mainCategories', 'subCategories', 'brands', 'styles', 'sizes', 'colors', 'warehouses'));
     }
 
     public function create()
@@ -63,15 +65,18 @@ class AdminProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:sub_categories,id',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
             'sku' => 'required|string|unique:products',
             'brands' => 'array',
             'styles' => 'array',
             'sizes' => 'array',
             'colors' => 'array',
+            'warehouses' => 'array',
+            'warehouses.*.id' => 'exists:warehouses,id',
+            'warehouses.*.stocks' => 'nullable|integer|min:0',
+            'warehouses.*.income' => 'nullable|integer|min:0',
         ]);
 
-        $product = Product::create($request->only(['name', 'category_id', 'price', 'discount_price', 'stock', 'sku', 'description', 'is_active']));
+        $product = Product::create($request->only(['name', 'category_id', 'price', 'discount_price', 'sku', 'description', 'is_active']));
 
         if ($request->brands) {
             $product->brands()->attach($request->brands);
@@ -84,6 +89,16 @@ class AdminProductController extends Controller
         }
         if ($request->colors) {
             $product->colors()->attach($request->colors);
+        }
+        if ($request->warehouses) {
+            foreach ($request->warehouses as $warehouseData) {
+                if (isset($warehouseData['id'])) {
+                    $product->warehouses()->attach($warehouseData['id'], [
+                        'stocks' => $warehouseData['stocks'] ?? 0,
+                        'income' => $warehouseData['income'] ?? 0,
+                    ]);
+                }
+            }
         }
 
         if ($request->ajax()) {
@@ -99,7 +114,7 @@ class AdminProductController extends Controller
 
     public function edit(Product $product)
     {
-        $product->load(['brands', 'styles', 'sizes', 'colors', 'subCategory.category.mainCategory']);
+        $product->load(['brands', 'styles', 'sizes', 'colors', 'subCategory.category.mainCategory', 'warehouses']);
 
         if (request()->ajax()) {
             return response()->json($product);
@@ -112,7 +127,9 @@ class AdminProductController extends Controller
         $sizes = Size::all();
         $colors = Color::all();
 
-        return view('admin.products.edit', compact('product', 'mainCategories', 'subCategories', 'brands', 'styles', 'sizes', 'colors'));
+        $warehouses = \App\Models\Warehouse::all();
+
+        return view('admin.products.edit', compact('product', 'mainCategories', 'subCategories', 'brands', 'styles', 'sizes', 'colors', 'warehouses'));
     }
 
     public function update(Request $request, Product $product)
@@ -121,20 +138,36 @@ class AdminProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:sub_categories,id',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
             'sku' => 'required|string|unique:products,sku,' . $product->id,
             'brands' => 'array',
             'styles' => 'array',
             'sizes' => 'array',
             'colors' => 'array',
+            'warehouses' => 'array',
+            'warehouses.*.id' => 'exists:warehouses,id',
+            'warehouses.*.stocks' => 'nullable|integer|min:0',
+            'warehouses.*.income' => 'nullable|integer|min:0',
         ]);
 
-        $product->update($request->only(['name', 'category_id', 'price', 'discount_price', 'stock', 'sku', 'description', 'is_active']));
+        $product->update($request->only(['name', 'category_id', 'price', 'discount_price', 'sku', 'description', 'is_active']));
 
         $product->brands()->sync($request->brands ?? []);
         $product->styles()->sync($request->styles ?? []);
         $product->sizes()->sync($request->sizes ?? []);
         $product->colors()->sync($request->colors ?? []);
+
+        if ($request->has('warehouses')) {
+            $syncData = [];
+            foreach ($request->warehouses as $warehouseData) {
+                if (isset($warehouseData['id'])) {
+                    $syncData[$warehouseData['id']] = [
+                        'stocks' => $warehouseData['stocks'] ?? 0,
+                        'income' => $warehouseData['income'] ?? 0,
+                    ];
+                }
+            }
+            $product->warehouses()->sync($syncData);
+        }
 
         if ($request->ajax()) {
             return response()->json([

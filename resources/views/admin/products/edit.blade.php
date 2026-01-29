@@ -65,12 +65,34 @@
                             @error('discount_price') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Stock -->
-                        <div>
-                            <label for="stock" class="block text-sm font-medium text-gray-700">Stock</label>
-                            <input type="number" name="stock" id="stock" value="{{ old('stock', $product->stock) }}" required
-                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            @error('stock') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        <!-- Warehouses Stock & income -->
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Warehouses Stock & income</label>
+                            <div class="border rounded-md p-4 bg-gray-50 max-h-60 overflow-y-auto">
+                                @foreach($warehouses as $warehouse)
+                                    @php
+                                        $attached = $product->warehouses->find($warehouse->id);
+                                        $stocks = $attached ? $attached->pivot->stocks : 0;
+                                        $income = $attached ? $attached->pivot->income : 0;
+                                    @endphp
+                                    <div class="grid grid-cols-12 gap-4 mb-4 pb-4 border-b last:border-0 last:mb-0 last:pb-0">
+                                        <div class="col-span-4 flex items-center">
+                                            <input type="hidden" name="warehouses[{{ $loop->index }}][id]" value="{{ $warehouse->id }}">
+                                            <span class="text-sm font-medium text-gray-700">{{ $warehouse->name }}</span>
+                                        </div>
+                                        <div class="col-span-4">
+                                            <label class="block text-xs text-gray-500">Stock</label>
+                                            <input type="number" name="warehouses[{{ $loop->index }}][stocks]" value="{{ old('warehouses.'.$loop->index.'.stocks', $stocks) }}" min="0"
+                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                                        </div>
+                                        <div class="col-span-4">
+                                            <label class="block text-xs text-gray-500">income</label>
+                                            <input type="number" name="warehouses[{{ $loop->index }}][income]" value="{{ old('warehouses.'.$loop->index.'.income', $income) }}" min="0"
+                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
 
                         <!-- Is Active -->

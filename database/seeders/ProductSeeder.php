@@ -10,6 +10,7 @@ use App\Models\Brand;
 use App\Models\Style;
 use App\Models\Size;
 use App\Models\Color;
+use App\Models\Warehouse;
 use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
@@ -35,7 +36,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Comfortable cotton t-shirt',
                 'price' => 19.99,
                 'discount_price' => null,
-                'stock' => 100,
                 'sku' => 'TSHIRT-WHT-001',
                 'is_active' => true,
             ],
@@ -46,7 +46,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Classic blue jeans',
                 'price' => 49.99,
                 'discount_price' => 39.99,
-                'stock' => 50,
                 'sku' => 'JEANS-BLU-001',
                 'is_active' => true,
             ],
@@ -57,7 +56,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Light summer dress',
                 'price' => 29.99,
                 'discount_price' => null,
-                'stock' => 30,
                 'sku' => 'DRESS-SUM-001',
                 'is_active' => true,
             ],
@@ -68,7 +66,6 @@ class ProductSeeder extends Seeder
                 'description' => 'T-shirt with graphic print',
                 'price' => 14.99,
                 'discount_price' => null,
-                'stock' => 80,
                 'sku' => 'TSHIRT-GRP-001',
                 'is_active' => true,
             ],
@@ -79,7 +76,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Comfortable running shoes',
                 'price' => 79.99,
                 'discount_price' => 69.99,
-                'stock' => 40,
                 'sku' => 'SNEAKERS-RUN-001',
                 'is_active' => true,
             ],
@@ -90,7 +86,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Elegant high heels',
                 'price' => 59.99,
                 'discount_price' => null,
-                'stock' => 20,
                 'sku' => 'HEELS-HGH-001',
                 'is_active' => true,
             ],
@@ -101,7 +96,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Genuine leather handbag',
                 'price' => 99.99,
                 'discount_price' => 89.99,
-                'stock' => 15,
                 'sku' => 'HANDBAG-LTH-001',
                 'is_active' => true,
             ],
@@ -120,6 +114,15 @@ class ProductSeeder extends Seeder
             $product->styles()->attach($styles);
             $product->sizes()->attach($sizes);
             $product->colors()->attach($colors);
+
+            // Attach to all warehouses with random stock data
+            $warehouses = Warehouse::all();
+            foreach ($warehouses as $warehouse) {
+                $product->warehouses()->attach($warehouse->id, [
+                    'income' => rand(0, 50),
+                    'stocks' => rand(10, 100),
+                ]);
+            }
         }
     }
 }

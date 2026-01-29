@@ -19,7 +19,6 @@ class Product extends Model
         'description',
         'price',
         'discount_price',
-        'stock',
         'sku',
         'is_active',
     ];
@@ -84,5 +83,9 @@ class Product extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+    public function warehouses(): BelongsToMany
+    {
+        return $this->belongsToMany(Warehouse::class, 'product_warehouse')->withPivot(['income', 'stocks']);
     }
 }
