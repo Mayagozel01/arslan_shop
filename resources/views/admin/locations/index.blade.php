@@ -7,9 +7,10 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">Locations</h2>
-                        <a href="#" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <button onclick="openCreateModal()"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Add New Country
-                        </a>
+                        </button>
                     </div>
 
                     @if(session('success'))
@@ -48,7 +49,8 @@
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">{{ $country->name }}</div>
                                                     <div class="text-sm text-gray-500">{{ $country->code }} •
-                                                        {{ $country->latitude }}, {{ $country->longitude }}</div>
+                                                        {{ $country->latitude }}, {{ $country->longitude }}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -67,7 +69,8 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="#"
+                                            <button
+                                                onclick="openEditModal({{ $country->id }}, '{{ $country->name }}', '{{ $country->code }}', {{ $country->latitude }}, {{ $country->longitude }})"
                                                 class="text-indigo-600 hover:text-indigo-900 mr-4 transition-colors duration-200">
                                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -76,8 +79,8 @@
                                                     </path>
                                                 </svg>
                                                 Edit
-                                            </a>
-                                            <a href="#"
+                                            </button>
+                                            <button onclick="openAddCityModal({{ $country->id }}, '{{ $country->name }}')"
                                                 class="text-green-600 hover:text-green-900 mr-4 transition-colors duration-200">
                                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -85,8 +88,9 @@
                                                         d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                                 </svg>
                                                 Add City
-                                            </a>
-                                            <form method="POST" action="#" class="inline">
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.locations.destroy', $country) }}"
+                                                class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
@@ -126,4 +130,168 @@
             </div>
         </div>
     </div>
+
+    <!-- Create Country Modal -->
+    <div id="createModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden"
+        id="my-modal">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Add New Country</h3>
+                <form action="{{ route('admin.locations.store') }}" method="POST">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+                        <input type="text" name="name" id="name"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="code">Code</label>
+                        <input type="text" name="code" id="code" maxlength="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="latitude">Latitude</label>
+                        <input type="number" step="any" name="latitude" id="latitude"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="longitude">Longitude</label>
+                        <input type="number" step="any" name="longitude" id="longitude"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Create Country
+                        </button>
+                        <button type="button" onclick="closeCreateModal()"
+                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Country Modal -->
+    <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Edit Country</h3>
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit_name">Name</label>
+                        <input type="text" name="name" id="edit_name"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit_code">Code</label>
+                        <input type="text" name="code" id="edit_code" maxlength="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit_latitude">Latitude</label>
+                        <input type="number" step="any" name="latitude" id="edit_latitude"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit_longitude">Longitude</label>
+                        <input type="number" step="any" name="longitude" id="edit_longitude"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Update Country
+                        </button>
+                        <button type="button" onclick="closeEditModal()"
+                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add City Modal -->
+    <div id="addCityModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Add City to <span id="countryName"></span></h3>
+                <form id="addCityForm" method="POST">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="city_name">City Name</label>
+                        <input type="text" name="name" id="city_name"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button type="submit"
+                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Add City
+                        </button>
+                        <button type="button" onclick="closeAddCityModal()"
+                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCreateModal() {
+            document.getElementById('createModal').classList.remove('hidden');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.add('hidden');
+        }
+
+        function openEditModal(id, name, code, latitude, longitude) {
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_code').value = code;
+            document.getElementById('edit_latitude').value = latitude;
+            document.getElementById('edit_longitude').value = longitude;
+            document.getElementById('editForm').action = '{{ url("admin/locations") }}/' + id;
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function openAddCityModal(countryId, countryName) {
+            document.getElementById('countryName').textContent = countryName;
+            document.getElementById('addCityForm').action = '{{ url("admin/locations") }}/' + countryId + '/cities';
+            document.getElementById('addCityModal').classList.remove('hidden');
+        }
+
+        function closeAddCityModal() {
+            document.getElementById('addCityModal').classList.add('hidden');
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function (event) {
+            if (event.target.classList.contains('bg-gray-600')) {
+                closeCreateModal();
+                closeEditModal();
+                closeAddCityModal();
+            }
+        }
+    </script>
 @endsection

@@ -13,13 +13,13 @@ class Warehouse extends Model
 
     protected $fillable = [
         'name',
-        'location',
         'address',
         'phone',
-        'manager_id',
         'manager_name',
         'capacity',
         'is_active',
+        'location_id',
+        'warehouse_manager_id',
     ];
 
     protected $casts = [
@@ -41,5 +41,9 @@ class Warehouse extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_warehouse')->withPivot(['income', 'stocks']);
+    }
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'location_id');
     }
 }

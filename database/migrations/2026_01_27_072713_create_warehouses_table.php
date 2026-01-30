@@ -13,14 +13,14 @@ return new class extends Migration {
         Schema::create('warehouses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('location')->nullable();
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('manager_name')->nullable();
             $table->integer('capacity')->nullable(); // in square meters or units
             $table->boolean('is_active')->default(true);
-            $table->timestamps();
+            $table->foreignId('location_id')->constrained('cities')->onDelete('cascade');
             $table->foreignId('warehouse_manager_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

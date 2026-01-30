@@ -54,6 +54,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     })->name('categories.by-main');
 
     Route::resource('/locations', CountryController::class);
+    Route::post('/locations/{country}/cities', [CountryController::class, 'storeCity'])->name('admin.locations.store-city');
 
 });
 

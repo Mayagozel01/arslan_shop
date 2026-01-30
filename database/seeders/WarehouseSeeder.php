@@ -12,37 +12,46 @@ class WarehouseSeeder extends Seeder
      */
     public function run(): void
     {
+        $cities = \App\Models\City::all();
+        if ($cities->isEmpty()) {
+            return; // No cities to assign warehouses to
+        }
+
         $warehouseManager = \App\Models\User::where('username', 'staff')->first();
+        if (!$warehouseManager) {
+            return; // No warehouse manager user found
+        }
+
         $warehouses = [
             [
                 'name' => 'Main Warehouse',
-                'location' => 'Tashkent',
                 'address' => '123 Main Street, Tashkent',
                 'phone' => '+998901234567',
-                'warehouse_manager_id' => $warehouseManager->id,
                 'manager_name' => 'John Smith',
                 'capacity' => 5000,
                 'is_active' => true,
+                'location_id' => $cities->first()->id,
+                'warehouse_manager_id' => $warehouseManager->id,
             ],
             [
                 'name' => 'North Warehouse',
-                'location' => 'Tashkent North',
                 'address' => '456 North Avenue, Tashkent',
                 'phone' => '+998907654321',
-                'warehouse_manager_id' => $warehouseManager->id,
                 'manager_name' => 'Jane Doe',
                 'capacity' => 3000,
                 'is_active' => true,
+                'location_id' => $cities->first()->id,
+                'warehouse_manager_id' => $warehouseManager->id,
             ],
             [
                 'name' => 'South Warehouse',
-                'location' => 'Tashkent South',
                 'address' => '789 South Road, Tashkent',
                 'phone' => '+998905556667',
-                'warehouse_manager_id' => $warehouseManager->id,
                 'manager_name' => 'Bob Johnson',
                 'capacity' => 4000,
                 'is_active' => true,
+                'location_id' => $cities->first()->id,
+                'warehouse_manager_id' => $warehouseManager->id,
             ],
         ];
 
