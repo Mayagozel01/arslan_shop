@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminController\WarehouseController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ManagerController\ManagerController;
 
 Route::get('/', function () {
     return view('home');
@@ -34,6 +35,7 @@ Route::prefix('pokupatel')->name('pokupatel.')->middleware('auth')->group(functi
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'showLoginForm'])->name('dashboard');
+    //Role Admin 
     Route::get('locations', [CountryController::class, 'index'])->name('locations');
     Route::post('/dashboard/login', [AuthController::class, 'dashboardLogin'])->name('dashboard.login');
     Route::get('/dashboard/home', [AdminController::class, 'dashboard'])->name('dashboard.home');
@@ -41,6 +43,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('/sotrudniks', SotrudnikController::class);
     Route::resource('/products', AdminProductController::class);
     Route::resource('/warehouses', WarehouseController::class);
+    //Role Manager
+    Route::get('/references', [ManagerController::class, 'dashboard'])->name('manager.references');
 
     // AJAX routes for creating related entities
     Route::post('/products/store-brand', [AdminProductController::class, 'storeBrand'])->name('products.store-brand');
