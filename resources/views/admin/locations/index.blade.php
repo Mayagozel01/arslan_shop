@@ -21,7 +21,7 @@
 
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
-                            <thead class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                            <thead class="bg-purple-200 text-white">
                                 <tr>
                                     <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
                                         Country

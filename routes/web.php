@@ -8,7 +8,7 @@ use App\Http\Controllers\SotrudnikController;
 use App\Http\Controllers\PokupatelController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminProductController;
-use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\AdminController\WarehouseController;
 use App\Http\Controllers\Auth\AuthController;
 
 Route::get('/', function () {

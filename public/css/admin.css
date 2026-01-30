@@ -327,9 +327,6 @@ table {
     overflow: hidden;
 }
 
-thead {
-    background-color: var(--bg-white);
-}
 
 th {
     padding: 15px;
