@@ -45,10 +45,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('/warehouses', WarehouseController::class);
     //Role Manager
     Route::get('/references', [ManagerController::class, 'dashboard'])->name('manager.references');
+    Route::post('/references/main-category', [ManagerController::class, 'storeMaincategory'])->name('manager.add-main-category');
+    Route::delete('/references/main-category/{slug}', [ManagerController::class, 'deleteMainCategory'])->name('manager.delete-main-category');
 
     // AJAX routes for creating related entities
     Route::post('/products/store-brand', [AdminProductController::class, 'storeBrand'])->name('products.store-brand');
-    Route::post('/products/store-category', [AdminProductController::class, 'storeCategory'])->name('products.store-category');
     Route::post('/products/store-sub-category', [AdminProductController::class, 'storeSubCategory'])->name('products.store-sub-category');
     Route::post('/products/store-style', [AdminProductController::class, 'storeStyle'])->name('products.store-style');
     Route::post('/products/store-size', [AdminProductController::class, 'storeSize'])->name('products.store-size');

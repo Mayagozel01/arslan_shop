@@ -20,14 +20,29 @@ class MainCategorySeeder extends Seeder
                 'description' => 'All types of clothing items'
             ],
             [
-                'name' => 'Shoes',
-                'slug' => 'shoes',
-                'description' => 'Footwear for men and women'
+                'name' => 'Footwear',
+                'slug' => 'footwear',
+                'description' => 'Shoes and footwear for all occasions'
             ],
             [
                 'name' => 'Accessories',
                 'slug' => 'accessories',
-                'description' => 'Fashion accessories'
+                'description' => 'Fashion accessories and jewelry'
+            ],
+            [
+                'name' => 'Electronics',
+                'slug' => 'electronics',
+                'description' => 'Electronic devices and gadgets'
+            ],
+            [
+                'name' => 'Sports & Outdoors',
+                'slug' => 'sports-outdoors',
+                'description' => 'Sports equipment and outdoor gear'
+            ],
+            [
+                'name' => 'Home & Living',
+                'slug' => 'home-living',
+                'description' => 'Home decor and living essentials'
             ],
         ];
 
